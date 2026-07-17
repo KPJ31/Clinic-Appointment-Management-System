@@ -9,18 +9,23 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $appointments = Appointment::with(['doctor', 'patient'])->get();
+
         return view('appoinments.index', compact('appointments'));
     }
 
-    public function create() {
+    public function create()
+    {
         $doctors = Doctor::all();
         $patients = Patient::all();
+
         return view('appoinments.create', compact('doctors', 'patients'));
     }
 
-    public function save(Request $request) {
+    public function save(Request $request)
+    {
         $validated = $this->validatedAppointment($request);
 
         Appointment::create($validated);
@@ -28,18 +33,23 @@ class AppointmentController extends Controller
         return redirect()->route('appointmentIndex')->with('success', 'Appointment Created Successfully');
     }
 
-    public function show(Appointment $appointment) {
+    public function show(Appointment $appointment)
+    {
         $appointment->load(['doctor', 'patient']);
+
         return view('appoinments.show', compact('appointment'));
     }
 
-    public function edit(Appointment $appointment) {
+    public function edit(Appointment $appointment)
+    {
         $doctors = Doctor::all();
         $patients = Patient::all();
+
         return view('appoinments.edit', compact('appointment', 'doctors', 'patients'));
     }
 
-    public function update(Request $request, Appointment $appointment) {
+    public function update(Request $request, Appointment $appointment)
+    {
         $validated = $this->validatedAppointment($request);
 
         $appointment->update($validated);
@@ -47,12 +57,15 @@ class AppointmentController extends Controller
         return redirect()->route('appointmentIndex')->with('success', 'Appointment Updated Successfully');
     }
 
-    public function delete(Appointment $appointment) {
+    public function delete(Appointment $appointment)
+    {
         $appointment->delete();
+
         return redirect()->route('appointmentIndex')->with('success', 'Appointment Deleted Successfully');
     }
 
-    private function validatedAppointment(Request $request): array {
+    private function validatedAppointment(Request $request): array
+    {
         return $request->validate([
             'appointment_date' => 'required|date',
             'appointment_time' => 'required|date_format:H:i',

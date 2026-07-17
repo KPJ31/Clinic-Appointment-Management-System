@@ -10,18 +10,23 @@ use Illuminate\Validation\Rule;
 
 class DoctorController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $doctors = Doctor::with(['specialization', 'services'])->get();
+
         return view('doctors.index', compact('doctors'));
     }
 
-    public function create() {
+    public function create()
+    {
         $specializations = Specialization::all();
         $services = Service::all();
+
         return view('doctors.create', compact('specializations', 'services'));
     }
 
-    public function save(Request $request) {
+    public function save(Request $request)
+    {
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -44,19 +49,24 @@ class DoctorController extends Controller
         return redirect()->route('doctorIndex')->with('success', 'Doctor added successfully.');
     }
 
-    public function show(Doctor $doctor) {
+    public function show(Doctor $doctor)
+    {
         $doctor->load(['specialization', 'services']);
+
         return view('doctors.show', compact('doctor'));
     }
 
-    public function edit(Doctor $doctor) {
+    public function edit(Doctor $doctor)
+    {
         $doctor->load('services');
         $specializations = Specialization::all();
         $services = Service::all();
+
         return view('doctors.edit', compact('doctor', 'specializations', 'services'));
     }
 
-    public function update(Request $request, Doctor $doctor) {
+    public function update(Request $request, Doctor $doctor)
+    {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -82,7 +92,8 @@ class DoctorController extends Controller
         return redirect()->route('doctorIndex')->with('success', 'Doctor updated successfully.');
     }
 
-    public function delete(Doctor $doctor) {
+    public function delete(Doctor $doctor)
+    {
         $doctor->services()->sync([]);
         $doctor->delete();
 

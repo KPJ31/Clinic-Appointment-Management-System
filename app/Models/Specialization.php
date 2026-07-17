@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Doctor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,7 +12,8 @@ class Specialization extends Model
         'description',
     ];
 
-    public function doctors(): HasMany {
+    public function doctors(): HasMany
+    {
         return $this->hasMany(Doctor::class, 'specialization_id');
     }
 }

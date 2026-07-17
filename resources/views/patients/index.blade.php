@@ -7,7 +7,7 @@
                 <h3 class="page-title mb-1">Patients</h3>
                 <p class="text-muted mb-0">Patient contact and profile records.</p>
             </div>
-            <a href="{{ url('/patients/create') }}" class="btn btn-primary">Add Patient</a>
+            <a href="{{ route('patientCreate') }}" class="btn btn-primary">Add Patient</a>
         </div>
 
         <div class="table-responsive">
@@ -36,9 +36,9 @@
                             <td>{{ $patient->profile->boold_group ?? '-' }}</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                    <a href="{{ url('/patients/' . $patient->id) }}" class="btn btn-info btn-sm text-white">View</a>
-                                    <a href="{{ url('/patients/' . $patient->id . '/edit') }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ url('/patients/' . $patient->id) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('patientShow', $patient) }}" class="btn btn-info btn-sm text-white">View</a>
+                                    <a href="{{ route('patientEdit', $patient) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('patientDelete', $patient) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this patient?')">Delete</button>

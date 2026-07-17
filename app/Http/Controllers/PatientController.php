@@ -8,16 +8,20 @@ use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $patients = Patient::with('profile')->get();
+
         return view('patients.index', compact('patients'));
     }
 
-    public function create() {
+    public function create()
+    {
         return view('patients.create');
     }
 
-    public function save(Request $request) {
+    public function save(Request $request)
+    {
         $validated = $this->validatedPatient($request);
 
         $profileData = $this->profileData($validated);
@@ -29,17 +33,22 @@ class PatientController extends Controller
         return redirect()->route('patientIndex')->with('success', 'Patient Created Successfully');
     }
 
-    public function show(Patient $patient) {
+    public function show(Patient $patient)
+    {
         $patient->load('profile');
+
         return view('patients.show', compact('patient'));
     }
 
-    public function edit(Patient $patient) {
+    public function edit(Patient $patient)
+    {
         $patient->load('profile');
+
         return view('patients.edit', compact('patient'));
     }
 
-    public function update(Request $request, Patient $patient) {
+    public function update(Request $request, Patient $patient)
+    {
         $validated = $this->validatedPatient($request, $patient);
 
         $patient->update($this->patientData($validated));
@@ -51,12 +60,15 @@ class PatientController extends Controller
         return redirect()->route('patientIndex')->with('success', 'Patient Updated Successfully');
     }
 
-    public function delete(Patient $patient) {
+    public function delete(Patient $patient)
+    {
         $patient->delete();
+
         return redirect()->route('patientIndex')->with('success', 'Patient Deleted Successfully');
     }
 
-    private function validatedPatient(Request $request, ?Patient $patient = null): array {
+    private function validatedPatient(Request $request, ?Patient $patient = null): array
+    {
         $emailRule = Rule::unique('patients');
 
         if ($patient) {
@@ -80,7 +92,8 @@ class PatientController extends Controller
         ]);
     }
 
-    private function patientData(array $validated): array {
+    private function patientData(array $validated): array
+    {
         return [
             'name' => $validated['name'],
             'phone' => $validated['phone'],
@@ -91,7 +104,8 @@ class PatientController extends Controller
         ];
     }
 
-    private function profileData(array $validated): array {
+    private function profileData(array $validated): array
+    {
         return [
             'boold_group' => $validated['boold_group'] ?? '',
             'emergency_contact' => $validated['emergency_contact'] ?? '',
