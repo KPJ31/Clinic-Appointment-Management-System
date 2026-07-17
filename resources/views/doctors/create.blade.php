@@ -7,10 +7,10 @@
                 <h3 class="page-title mb-1">Add Doctor</h3>
                 <p class="text-muted mb-0">Create a doctor record linked to a specialization.</p>
             </div>
-            <a href="{{ url('/doctors') }}" class="btn btn-outline-secondary">Back</a>
+            <a href="{{ route('doctorIndex') }}" class="btn btn-outline-secondary">Back</a>
         </div>
 
-        <form action="{{ url('/doctors') }}" method="POST">
+        <form action="{{ route('doctorSave') }}" method="POST">
             @csrf
             <div class="row g-3">
                 <div class="col-md-6">
@@ -45,6 +45,14 @@
                 <div class="col-md-4">
                     <label for="available_to" class="form-label">Available To</label>
                     <input type="time" id="available_to" name="available_to" class="form-control" value="{{ old('available_to') }}" required>
+                </div>
+                <div class="col-12">
+                    <label for="service_ids" class="form-label">Services</label>
+                    <select id="service_ids" name="service_ids[]" class="form-select" multiple>
+                        @foreach($services ?? [] as $service)
+                            <option value="{{ $service->id }}" @selected(in_array($service->id, old('service_ids', [])))>{{ $service->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-4">Save Doctor</button>

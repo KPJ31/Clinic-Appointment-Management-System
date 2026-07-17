@@ -18,11 +18,11 @@ class Patient extends Model
         'address',
     ];
 
-    public function patientProfile(): HasOne {
+    public function profile(): HasOne {
         return $this->hasOne(PatientProfile::class, 'patient_id');
     }
 
-    public function appoinments(): HasMany {
+    public function appointments(): HasMany {
         return $this->hasMany(Appointment::class, 'patient_id');
     }
 }

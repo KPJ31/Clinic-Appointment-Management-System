@@ -23,6 +23,10 @@
             <dd class="col-sm-9">{{ $doctor->available_from ?? '-' }} - {{ $doctor->available_to ?? '-' }}</dd>
             <dt class="col-sm-3">Specialization</dt>
             <dd class="col-sm-9">{{ $doctor->specialization->name ?? $doctor->specialization_id ?? '-' }}</dd>
+            <dt class="col-sm-3">Services</dt>
+            <dd class="col-sm-9">
+                {{ isset($doctor) && $doctor->services->isNotEmpty() ? $doctor->services->pluck('name')->join(', ') : '-' }}
+            </dd>
         </dl>
     </div>
 @endsection

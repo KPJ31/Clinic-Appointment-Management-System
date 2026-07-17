@@ -15,6 +15,6 @@ class Service extends Model
     ];
 
     public function doctors(): BelongsToMany {
-        return $this->belongsToMany(Doctor::class, 'doctor_services', 'doctor_id', 'service_id');
+        return $this->belongsToMany(Doctor::class, 'doctor_service', 'service_id', 'doctor_id');
     }
 }

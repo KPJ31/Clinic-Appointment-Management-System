@@ -10,7 +10,7 @@
             <a href="{{ url('/doctors') }}" class="btn btn-outline-secondary">Back</a>
         </div>
 
-        <form action="{{ isset($doctor) ? url('/doctors/' . $doctor->id) : '#' }}" method="POST">
+        <form action="{{ route('doctorUpdate', $doctor) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="row g-3">
@@ -46,6 +46,17 @@
                 <div class="col-md-4">
                     <label for="available_to" class="form-label">Available To</label>
                     <input type="time" id="available_to" name="available_to" class="form-control" value="{{ old('available_to', $doctor->available_to ?? '') }}" required>
+                </div>
+                <div class="col-12">
+                    <label for="service_ids" class="form-label">Services</label>
+                    @php
+                        $selectedServices = old('service_ids', isset($doctor) ? $doctor->services->pluck('id')->toArray() : []);
+                    @endphp
+                    <select id="service_ids" name="service_ids[]" class="form-select" multiple>
+                        @foreach($services ?? [] as $service)
+                            <option value="{{ $service->id }}" @selected(in_array($service->id, $selectedServices))>{{ $service->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-4">Update Doctor</button>

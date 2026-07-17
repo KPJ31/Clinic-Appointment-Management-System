@@ -14,7 +14,7 @@
                     <a class="nav-link" href="{{ route('specialIndex') }}">Specializations</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/doctors') }}">Doctors</a>
+                    <a class="nav-link" href="{{ route('doctorIndex') }}">Doctors</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url('/patients') }}">Patients</a>

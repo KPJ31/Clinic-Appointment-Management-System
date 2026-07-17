@@ -24,15 +24,15 @@ class Doctor extends Model
         'specialization_id',
     ];
 
-    public function specializations(): BelongsTo {
+    public function specialization(): BelongsTo {
         return $this->belongsTo(Specialization::class, 'specialization_id');
     }
 
-    public function appoinments(): HasMany {
-        return $this->hasMany(Appointment::class, 'appoinment_id');
+    public function appointments(): HasMany {
+        return $this->hasMany(Appointment::class, 'doctor_id');
     }
 
     public function services(): BelongsToMany {
-        return $this->belongsToMany(Service::class, 'doctor_services', 'doctor_id', 'service_id');
+        return $this->belongsToMany(Service::class, 'doctor_service', 'doctor_id', 'service_id');
     }
 }

@@ -7,7 +7,7 @@
                 <h3 class="page-title mb-1">Doctors</h3>
                 <p class="text-muted mb-0">Doctor contact, consultation, and availability records.</p>
             </div>
-            <a href="{{ url('/doctors/create') }}" class="btn btn-primary">Add Doctor</a>
+            <a href="{{ route('doctorCreate') }}" class="btn btn-primary">Add Doctor</a>
         </div>
 
         <div class="table-responsive">
@@ -21,6 +21,7 @@
                         <th>Fee</th>
                         <th>Available</th>
                         <th>Specialization</th>
+                        <th>Services</th>
                         <th style="width: 210px;">Action</th>
                     </tr>
                 </thead>
@@ -34,6 +35,7 @@
                             <td>{{ number_format($doctor->consulatation_fee, 2) }}</td>
                             <td>{{ $doctor->available_from }} - {{ $doctor->available_to }}</td>
                             <td>{{ $doctor->specialization->name ?? $doctor->specialization_id }}</td>
+                            <td>{{ $doctor->services->isNotEmpty() ? $doctor->services->pluck('name')->join(', ') : '-' }}</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2 flex-wrap">
                                     <a href="{{ url('/doctors/' . $doctor->id) }}" class="btn btn-info btn-sm text-white">View</a>
@@ -48,7 +50,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted fw-semibold py-4">No doctors found.</td>
+                            <td colspan="9" class="text-center text-muted fw-semibold py-4">No doctors found.</td>
                         </tr>
                     @endforelse
                 </tbody>

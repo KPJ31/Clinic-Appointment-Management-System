@@ -54,6 +54,10 @@
     @include('components.navbar')
 
     <div class="container mt-5 page-shell">
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
         @yield('main')
     </div>
 

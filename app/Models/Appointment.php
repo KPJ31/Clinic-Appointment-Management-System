@@ -20,11 +20,11 @@ class Appointment extends Model
         'patient_id',
     ];
 
-    public function doctors(): BelongsTo {
+    public function doctor(): BelongsTo {
         return $this->belongsTo(Doctor::class, 'doctor_id');
     }
 
-    public function patients(): BelongsTo {
+    public function patient(): BelongsTo {
         return $this->belongsTo(Patient::class, 'patient_id');
     }
 }
