@@ -28,9 +28,9 @@
                             <td>{{ $specialization->description }}</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2 flex-wrap">
-                                    <a href="{{ url('/specializations/' . $specialization->id) }}" class="btn btn-info btn-sm text-white">View</a>
-                                    <a href="{{ url('/specializations/' . $specialization->id . '/edit') }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ url('/specializations/' . $specialization->id) }}" method="POST" class="d-inline">
+                                    <a href="{{ route('specialShow', $specialization->id) }}" class="btn btn-info btn-sm text-white">View</a>
+                                    <a href="{{ route('specialEdit', $specialization->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('specialDelete', $specialization->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this specialization?')">Delete</button>

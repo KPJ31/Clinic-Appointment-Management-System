@@ -10,7 +10,7 @@
             <a href="{{ route('specialIndex') }}" class="btn btn-outline-secondary">Back</a>
         </div>
 
-        <form action="{{ url('/specializations') }}" method="POST">
+        <form action="{{ route('specialSave') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>

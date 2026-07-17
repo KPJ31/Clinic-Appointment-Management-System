@@ -10,7 +10,7 @@
             <a href="{{ url('/specializations') }}" class="btn btn-outline-secondary">Back</a>
         </div>
 
-        <form action="{{ isset($specialization) ? url('/specializations/' . $specialization->id) : '#' }}" method="POST">
+        <form action="{{ route('specialUpdate', $specialization->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="mb-3">

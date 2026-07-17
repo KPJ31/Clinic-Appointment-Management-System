@@ -7,7 +7,7 @@
                 <h3 class="page-title mb-1">{{ $specialization->name ?? 'Specialization Details' }}</h3>
                 <p class="text-muted mb-0">Department record information.</p>
             </div>
-            <a href="{{ url('/specializations') }}" class="btn btn-outline-secondary">Back</a>
+            <a href="{{ route('specialIndex') }}" class="btn btn-outline-secondary">Back</a>
         </div>
 
         <dl class="row mb-0">
