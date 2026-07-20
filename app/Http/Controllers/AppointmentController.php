@@ -26,7 +26,14 @@ class AppointmentController extends Controller
 
     public function save(Request $request)
     {
-        $validated = $this->validatedAppointment($request);
+        $validated = $request->validate([
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|date_format:H:i',
+            'reason' => 'required|string',
+            'status' => 'required|in:pedding,confirmed,completed,cancelled',
+            'doctor_id' => 'required|exists:doctors,id',
+            'patient_id' => 'required|exists:patients,id',
+        ]);
 
         Appointment::create($validated);
 
@@ -50,7 +57,14 @@ class AppointmentController extends Controller
 
     public function update(Request $request, Appointment $appointment)
     {
-        $validated = $this->validatedAppointment($request);
+        $validated = $request->validate([
+            'appointment_date' => 'required|date',
+            'appointment_time' => 'required|date_format:H:i',
+            'reason' => 'required|string',
+            'status' => 'required|in:pedding,confirmed,completed,cancelled',
+            'doctor_id' => 'required|exists:doctors,id',
+            'patient_id' => 'required|exists:patients,id',
+        ]);
 
         $appointment->update($validated);
 
@@ -62,17 +76,5 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         return redirect()->route('appointmentIndex')->with('success', 'Appointment Deleted Successfully');
-    }
-
-    private function validatedAppointment(Request $request): array
-    {
-        return $request->validate([
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required|date_format:H:i',
-            'reason' => 'required|string',
-            'status' => 'required|in:pedding,confirmed,completed,cancelled',
-            'doctor_id' => 'required|exists:doctors,id',
-            'patient_id' => 'required|exists:patients,id',
-        ]);
     }
 }

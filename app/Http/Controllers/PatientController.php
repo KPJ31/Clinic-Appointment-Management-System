@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
@@ -22,13 +21,32 @@ class PatientController extends Controller
 
     public function save(Request $request)
     {
-        $validated = $this->validatedPatient($request);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|email|unique:patients',
+            'dob' => 'required|date',
+            'gender' => 'required|in:male,female',
+            'address' => 'required|string',
+            'boold_group' => 'nullable|string|max:10',
+            'emergency_contact' => 'nullable|string|max:20',
+            'medical_note' => 'nullable|string',
+        ]);
 
-        $profileData = $this->profileData($validated);
-        $patientData = $this->patientData($validated);
+        $patient = Patient::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'dob' => $validated['dob'],
+            'gender' => $validated['gender'],
+            'address' => $validated['address'],
+        ]);
 
-        $patient = Patient::create($patientData);
-        $patient->profile()->create($profileData);
+        $patient->profile()->create([
+            'boold_group' => $validated['boold_group'] ?? '',
+            'emergency_contact' => $validated['emergency_contact'] ?? '',
+            'medical_note' => $validated['medical_note'] ?? '',
+        ]);
 
         return redirect()->route('patientIndex')->with('success', 'Patient Created Successfully');
     }
@@ -49,12 +67,34 @@ class PatientController extends Controller
 
     public function update(Request $request, Patient $patient)
     {
-        $validated = $this->validatedPatient($request, $patient);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'required|email|unique:patients,email,' . $patient->id,
+            'dob' => 'required|date',
+            'gender' => 'required|in:male,female',
+            'address' => 'required|string',
+            'boold_group' => 'nullable|string|max:10',
+            'emergency_contact' => 'nullable|string|max:20',
+            'medical_note' => 'nullable|string',
+        ]);
 
-        $patient->update($this->patientData($validated));
+        $patient->update([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'dob' => $validated['dob'],
+            'gender' => $validated['gender'],
+            'address' => $validated['address'],
+        ]);
+
         $patient->profile()->updateOrCreate(
             ['patient_id' => $patient->id],
-            $this->profileData($validated)
+            [
+                'boold_group' => $validated['boold_group'] ?? '',
+                'emergency_contact' => $validated['emergency_contact'] ?? '',
+                'medical_note' => $validated['medical_note'] ?? '',
+            ]
         );
 
         return redirect()->route('patientIndex')->with('success', 'Patient Updated Successfully');
@@ -65,51 +105,5 @@ class PatientController extends Controller
         $patient->delete();
 
         return redirect()->route('patientIndex')->with('success', 'Patient Deleted Successfully');
-    }
-
-    private function validatedPatient(Request $request, ?Patient $patient = null): array
-    {
-        $emailRule = Rule::unique('patients');
-
-        if ($patient) {
-            $emailRule->ignore($patient->id);
-        }
-
-        return $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => [
-                'required',
-                'email',
-                $emailRule,
-            ],
-            'dob' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'address' => 'required|string',
-            'boold_group' => 'nullable|string|max:10',
-            'emergency_contact' => 'nullable|string|max:20',
-            'medical_note' => 'nullable|string',
-        ]);
-    }
-
-    private function patientData(array $validated): array
-    {
-        return [
-            'name' => $validated['name'],
-            'phone' => $validated['phone'],
-            'email' => $validated['email'],
-            'dob' => $validated['dob'],
-            'gender' => $validated['gender'],
-            'address' => $validated['address'],
-        ];
-    }
-
-    private function profileData(array $validated): array
-    {
-        return [
-            'boold_group' => $validated['boold_group'] ?? '',
-            'emergency_contact' => $validated['emergency_contact'] ?? '',
-            'medical_note' => $validated['medical_note'] ?? '',
-        ];
     }
 }

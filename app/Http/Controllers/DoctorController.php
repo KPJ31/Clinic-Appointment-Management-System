@@ -6,7 +6,6 @@ use App\Models\Doctor;
 use App\Models\Service;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class DoctorController extends Controller
 {
@@ -27,8 +26,7 @@ class DoctorController extends Controller
 
     public function save(Request $request)
     {
-
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|unique:doctors',
@@ -40,11 +38,16 @@ class DoctorController extends Controller
             'service_ids.*' => 'exists:services,id',
         ]);
 
-        $serviceIds = $validatedData['service_ids'] ?? [];
-        unset($validatedData['service_ids']);
-
-        $doctor = Doctor::create($validatedData);
-        $doctor->services()->sync($serviceIds);
+        $doctor = Doctor::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'consulatation_fee' => $validated['consulatation_fee'],
+            'available_from' => $validated['available_from'],
+            'available_to' => $validated['available_to'],
+            'specialization_id' => $validated['specialization_id'],
+        ]);
+        $doctor->services()->sync($validated['service_ids'] ?? []);
 
         return redirect()->route('doctorIndex')->with('success', 'Doctor added successfully.');
     }
@@ -67,14 +70,10 @@ class DoctorController extends Controller
 
     public function update(Request $request, Doctor $doctor)
     {
-        $validatedData = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('doctors')->ignore($doctor->id),
-            ],
+            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
             'consulatation_fee' => 'required|numeric|min:0',
             'available_from' => 'required|date_format:H:i',
             'available_to' => 'required|date_format:H:i',
@@ -83,11 +82,16 @@ class DoctorController extends Controller
             'service_ids.*' => 'exists:services,id',
         ]);
 
-        $serviceIds = $validatedData['service_ids'] ?? [];
-        unset($validatedData['service_ids']);
-
-        $doctor->update($validatedData);
-        $doctor->services()->sync($serviceIds);
+        $doctor->update([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'],
+            'consulatation_fee' => $validated['consulatation_fee'],
+            'available_from' => $validated['available_from'],
+            'available_to' => $validated['available_to'],
+            'specialization_id' => $validated['specialization_id'],
+        ]);
+        $doctor->services()->sync($validated['service_ids'] ?? []);
 
         return redirect()->route('doctorIndex')->with('success', 'Doctor updated successfully.');
     }
